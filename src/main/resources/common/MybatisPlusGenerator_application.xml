@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
+">
+	
+	<!--
+		- 该配置文件为 Mybatis plus 的代码生成器配置
+		- 查看bean属性注释直接鼠标悬停在属性名称上
+	-->
+	
+	<!-- 导入外部配置[jdbc] -->
+	<context:property-placeholder location="classpath:common/MybatisPlusGenerator.properties" />
+
+	<!-- 生成器 -->
+	<bean id="autoGenerator" class="com.baomidou.mybatisplus.generator.AutoGenerator">
+		<!-- 全局配置 -->
+		<property name="globalConfig" ref="globalConfig" />
+		<!-- 数据源 -->
+		<property name="dataSource" ref="dataSourceConfig" />
+		<!-- 包名配置 -->
+		<property name="packageInfo" ref="packageConfig" />
+		<!-- 模版引擎 -->
+		<property name="templateEngine">
+			<bean class="com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine" />
+		</property>
+		<!-- 策略配置 -->
+		<property name="strategy" ref="strategyConfig" />
+	</bean>
+	
+	<!-- 全局配置 -->
+	<bean id="globalConfig" class="com.baomidou.mybatisplus.generator.config.GlobalConfig">
+		<property name="outputDir" value="${globalConfig.outputDir}" />
+		<property name="author" value="${globalConfig.author}" />
+		<property name="swagger2" value="${globalConfig.swagger2}" />
+		<property name="dateType" value="${globalConfig.dateType}" />
+		<property name="entityName" value="${globalConfig.entityName}" />
+		<property name="open" value="${globalConfig.open}" />
+	</bean>
+	
+	<!-- 包名配置 -->
+	<bean id="packageConfig" class="com.baomidou.mybatisplus.generator.config.PackageConfig">
+		<property name="parent" value="${packageConfig.parent}" />
+		<property name="entity" value="${packageConfig.entity}" />
+		<property name="service" value="${packageConfig.service}" />
+		<property name="serviceImpl" value="${packageConfig.serviceImpl}" />
+		<property name="mapper" value="${packageConfig.mapper}" />
+		<property name="xml" value="${packageConfig.xml}" />
+		<property name="controller" value="${packageConfig.controller}" />
+	</bean>
+	
+	<!-- 数据库 -->
+	<bean id="dataSourceConfig" class="com.baomidou.mybatisplus.generator.config.DataSourceConfig">
+		<property name="driverName" value="${jdbc.driverClass}" />
+		<property name="url" value="${jdbc.jdbcUrl}" />
+		<property name="username" value="${jdbc.user}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="dbType" value="MYSQL" />
+	</bean>
+	
+	<!-- 策略配置 -->
+	<bean id="strategyConfig" class="com.baomidou.mybatisplus.generator.config.StrategyConfig">
+		<property name="naming" value="${strategyConfig.naming}" />
+		<property name="tablePrefix" value="${strategyConfig.tablePrefix}" />
+		<property name="entityLombokModel" value="${strategyConfig.entityLombokModel}" />
+		<property name="restControllerStyle" value="${strategyConfig.restControllerStyle}" />
+	</bean>
+	
+</beans>

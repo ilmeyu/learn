@@ -1,0 +1,67 @@
+@startuml
+
+title 奖惩批量新增
+
+actor REST
+participant Facade
+participant 奖惩 as RP
+participant 明细 as detail
+participant 积分 as score
+participant DB
+
+activate REST
+REST -> Facade: RPC调用
+deactivate REST
+
+activate Facade
+Facade -> Facade: 参数校验
+Facade -> Facade: 参数转换
+Facade -> RP: 处理
+deactivate Facade
+
+activate RP
+RP -> RP: 分离出每个供应商奖惩项
+
+loop 按每个供应商循环
+RP -> DB: 查询供应商剩余信用分
+activate DB
+DB -> RP: OK
+deactivate DB
+
+RP -> RP: 检查供应商信用分
+note right of RP: 信用分不足直接报错提醒
+RP -> detail: 新增当前处理中供应商奖惩明细
+deactivate RP
+
+activate detail
+detail -> detail: 参数转换
+detail -> detail: 检查供应商状态以及奖惩项合法性
+detail -> detail: 填充参数
+detail -> DB: 写入奖惩项
+activate DB
+DB -> detail: OK
+deactivate DB
+detail -> score: 新增奖惩明细/积分/信用分
+deactivate detail
+
+activate score
+score -> score: 补充参数
+score -> DB: 写入奖惩明细/积分
+activate DB
+DB -> score: OK
+deactivate DB
+score -> RP
+deactivate score
+activate RP
+end
+
+RP -> Facade: 处理完成
+deactivate RP
+
+activate Facade
+Facade -> REST: 调用结果
+deactivate Facade
+
+activate REST
+
+@enduml

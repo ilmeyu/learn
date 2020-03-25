@@ -1,0 +1,50 @@
+@startuml
+
+autonumber
+
+title **供应商入驻流程**
+
+actor "用户" as User
+participant "统一账户平台" as Account
+participant "Partner平台" as Partner
+participant "工作流" as Server
+
+activate User
+User -> Account: 注册
+deactivate User
+activate Account
+
+Account --> User: 自动登录
+deactivate Account
+activate User
+
+User -> Partner: 获取入驻过程信息
+deactivate User
+activate Partner
+Partner --> User: 返回入驻过程信息
+deactivate Partner
+activate User
+
+User -> User: 填写或编辑公司基本信息
+User -> User: 填写或编辑供应商自评信息
+User -> User: 填写或编辑商品登记信息
+User -> Partner: 提交入驻信息
+deactivate User
+activate Partner
+Partner -> Server: 保存数据并提交到工作流审批
+deactivate Partner
+activate Server
+Server -> Server: 审核入驻信息
+Server --> Partner: 返回审批结果
+deactivate Server
+activate Partner
+
+Partner -> Partner: 关联公司并生成供应商编号
+note right of Partner : 首次入驻自动生成公司
+note right of Partner : 境外供应商不关联公司
+
+Partner --> User: 邮件通知审批结果
+deactivate Partner
+activate User
+
+@enduml

@@ -1,0 +1,58 @@
+@startuml
+
+title 制造商工厂新增/更新
+
+actor REST
+participant Facade
+participant Service
+participant DB
+
+activate REST
+REST -> Facade: 调用
+deactivate REST
+
+activate Facade
+Facade -> Facade: 参数检查
+Facade -> Service: 处理
+deactivate Facade
+
+activate Service
+Service -> Service: 参数转换
+Service -> Service: 拼装参数
+Service -> DB: 写入工厂基础信息
+deactivate Service
+
+activate DB
+DB -> Service: OK
+deactivate DB
+
+activate Service
+Service -> DB: 查询工厂关联评价
+deactivate Service
+
+activate DB
+DB -> Service: OK
+deactivate DB
+
+activate Service
+note right of Service: 存在评价则直接更新
+Service -> Service: 补充参数
+Service -> DB: 循环写入评价项
+deactivate Service
+
+activate DB
+DB -> Service: OK
+deactivate DB
+
+activate Service
+Service -> Service: 写Log
+Service -> Facade: 处理完成
+deactivate Service
+
+activate Facade
+Facade -> REST: 返回
+deactivate Facade
+
+activate REST
+
+@enduml

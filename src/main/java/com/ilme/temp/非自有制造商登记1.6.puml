@@ -1,0 +1,33 @@
+@startuml
+
+autonumber
+
+title 非自由品牌制造商登记
+
+actor 用户 as User
+
+participant "运营平台" as Partner
+participant "工作流" as Workflow
+
+activate User
+User -> Partner: 查询供应商
+deactivate User
+
+activate Partner
+Partner --> User: 返回供应商列表
+deactivate
+
+activate User
+User -> User: 选择供应商
+User -> User: 填写制造商基本信息
+User -> Partner: 提交保存
+deactivate
+
+activate Partner
+note right of Partner : 非自由品牌制造商无需审批
+Partner --> User: 返回结果
+deactivate
+
+activate User
+User -> User: 启用
+@enduml

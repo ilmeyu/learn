@@ -1,0 +1,62 @@
+@startuml
+
+title 发起股东审批流程
+
+actor 用户 as user
+participant 供应商 as cpm
+participant 供应商中心 as center
+participant 工作流 as workflow
+
+activate user
+user -> user: 登陆
+user -> user: 填写基本信息
+user -> cpm: 提交
+deactivate user
+
+activate cpm
+cpm -> cpm: 校验
+cpm -> center: 获取该供应商所属公司
+activate center
+center --> cpm: OK
+deactivate center
+note right of cpm: 此时股东状态为待提交
+cpm -> center: 新增股东
+activate center
+center --> cpm: OK
+deactivate center
+cpm -> cpm: 补充工作流参数
+cpm -> workflow: 检索上一次工作流
+deactivate cpm
+
+activate workflow
+workflow --> cpm: 结果
+deactivate workflow
+
+activate cpm
+cpm -> center: 获取工作流key
+activate center
+center --> cpm: OK
+deactivate center
+cpm -> workflow: 启动工作流
+deactivate cpm
+
+activate workflow
+workflow -> workflow: 启动/重启工作流
+workflow --> cpm: 返回参数
+deactivate workflow
+
+activate cpm
+cpm -> center: 创建工作流记录
+activate center
+center --> cpm: OK
+deactivate center
+cpm -> center: 更新股东状态
+activate center
+center --> cpm: OK
+deactivate center
+cpm --> user: 提交成功
+deactivate cpm
+
+activate user
+
+@enduml

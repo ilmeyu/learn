@@ -1,0 +1,63 @@
+@startuml
+
+title 制造商工厂审批
+
+actor "平台运营" as User
+participant "供应商运营平台" as EEOP
+database "供应商中心" as VendorCenter
+participant "工作流" as Workflow
+
+activate User
+User -> User: 填写工厂信息
+User -> User: 填写审批意见
+User -> EEOP: 提交
+deactivate User
+
+==前置检查==
+
+activate EEOP
+EEOP -> EEOP: 参数合法检查
+EEOP -> Workflow: 校验运营人员权限
+
+activate Workflow
+Workflow --> EEOP: 校验结果
+
+EEOP -> Workflow: 校验审批节点
+
+Workflow --> EEOP: 校验结果
+deactivate Workflow
+
+EEOP -> EEOP: 检查工厂
+note right of EEOP: 必须包含一条合格工厂
+==检查结束==
+EEOP -> VendorCenter: 新增/更新到数据库
+deactivate EEOP
+
+activate VendorCenter
+VendorCenter --> EEOP: 结果
+deactivate VendorCenter
+
+activate EEOP
+EEOP -> Workflow: 审批通过
+deactivate EEOP
+
+activate Workflow
+Workflow -> Workflow: 流程结束
+Workflow --> EEOP: 结果
+deactivate Workflow
+
+activate EEOP
+EEOP -> EEOP: 检查工作流结束标记
+EEOP -> VendorCenter: 将制造商状态更新为审批通过
+deactivate EEOP
+
+activate VendorCenter
+VendorCenter --> EEOP: 结果
+deactivate VendorCenter
+
+activate EEOP
+EEOP --> User: 操作成功
+deactivate EEOP
+
+activate User
+@enduml

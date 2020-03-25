@@ -1,0 +1,56 @@
+@startuml
+
+title 发起自有品牌制造商审批流程
+
+actor 用户 as user
+participant 运营平台 as bom
+participant 供应商中心 as center
+participant 工作流 as workflow
+
+activate user
+user -> user: 填写基本信息
+user -> bom: 提交
+deactivate user
+
+activate bom
+bom -> bom: 校验
+note right of bom: 此时制造商状态为待提交
+bom -> center: 新增制造商
+activate center
+center --> bom: OK
+deactivate center
+bom -> bom: 补充工作流参数
+bom -> workflow: 检索上一次工作流
+deactivate bom
+
+activate workflow
+workflow --> bom: 结果
+deactivate workflow
+
+activate bom
+bom -> center: 获取工作流key
+activate center
+center --> bom: OK
+deactivate center
+bom -> workflow: 发起工作流
+deactivate bom
+activate workflow
+workflow -> workflow: 启动/重启工作流
+workflow --> bom: 返回参数
+deactivate workflow
+
+activate bom
+bom -> center: 创建工作流记录
+activate center
+center --> bom: OK
+deactivate center
+bom -> center: 更新制造商审批状态
+activate center
+center --> bom: OK
+deactivate center
+bom --> user: 提交成功
+deactivate bom
+
+activate user
+
+@enduml

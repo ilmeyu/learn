@@ -1,0 +1,51 @@
+@startuml
+
+title 新增&更新制造商资质评价
+
+actor REST
+participant Facade
+participant Service
+participant DB
+
+activate REST
+REST -> Facade: RPC调用
+deactivate REST
+
+activate Facade
+Facade -> Facade: 参数校验
+Facade -> Service: 处理
+deactivate Facade
+
+activate Service
+Service -> Service: 参数转换
+Service -> DB: 获取当前制造商下所有工厂
+deactivate Service
+
+activate DB
+DB -> Service: OK
+deactivate DB
+
+activate Service
+note right of Service: 只有在当前制造商下查询到工厂才会更新
+Service -> Service: 新增或者更新工厂
+note right of Service: 审核通过、无需审核则不能新增评价
+Service -> Service: 校验制造商当前状态
+Service -> DB: 批量新增
+deactivate Service
+
+activate DB
+DB -> Service: OK
+deactivate DB
+
+activate Service
+Service -> Service: 写日志
+Service -> Facade: 结果
+deactivate Service
+
+activate Facade
+Facade -> REST: 返回
+deactivate Facade
+
+activate REST
+
+@enduml
