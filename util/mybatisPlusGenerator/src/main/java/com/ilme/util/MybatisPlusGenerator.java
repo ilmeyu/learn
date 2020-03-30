@@ -1,7 +1,6 @@
-package com.ilme.utils;
+package com.ilme.util;
 
 import com.baomidou.mybatisplus.generator.AutoGenerator;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -12,7 +11,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @author ilme
  * @date 2020/3/21 3:09 下午
  **/
-@Slf4j
 public class MybatisPlusGenerator {
 
 	public static void main(String[] args) {

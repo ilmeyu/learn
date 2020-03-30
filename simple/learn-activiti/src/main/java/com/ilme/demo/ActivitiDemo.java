@@ -1,4 +1,4 @@
-package com.ilme.complete.activiti;
+package com.ilme.demo;
 
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.*;
@@ -8,6 +8,7 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.activiti.engine.task.TaskQuery;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,8 @@ import java.util.List;
  **/
 @Test
 @Slf4j
-@ContextConfiguration(locations = {"classpath:complete/activiti/T2003181027_activiti.cfg.xml"})
-public class T2003181027 extends AbstractTestNGSpringContextTests {
+@ContextConfiguration(locations = {"classpath:activiti.cfg.xml"})
+public class ActivitiDemo extends AbstractTestNGSpringContextTests {
 
 	/**
 	 * 工作流引擎，相当于一个门面接口，通过 ProcessEngineConfiguration <br />
@@ -79,8 +80,27 @@ public class T2003181027 extends AbstractTestNGSpringContextTests {
 	@Autowired
 	ManagementService managementService;
 
+	Deployment deployment;
+
+	ProcessDefinition processDefinition;
+
 	@Test
 	public void init() {
+		log.debug("工作流启动成功");
+
+		deployment = repositoryService
+			.createDeploymentQuery()
+			.processDefinitionKey("process-3d6fb4f9-0246-4797-bca3-e3eb254a6b44")
+			.singleResult();
+
+		if (deployment == null) {
+			log.error("流程部署失败");
+			return;
+		}
+
+		processDefinition = repositoryService
+			.createProcessDefinitionQuery().deploymentId(deployment.getId()).singleResult();
+
 		log.debug("流程引擎名: {}", processEngine.getName());
 		log.debug("流程资源服务: {}", repositoryService);
 		log.debug("流程运行时服务: {}", runtimeService);
@@ -88,27 +108,29 @@ public class T2003181027 extends AbstractTestNGSpringContextTests {
 		log.debug("流程历史服务: {}", historyService);
 	}
 
-	// 部署流程
-	@Test
-	public void deploy() {
-		Deployment deployment = repositoryService
-			.createDeployment()
-			.addClasspathResource("complete/activiti/T2003181027_holiday.bpmn")
-			.key("holiday")
-			.name("请假申请流程")
-			.deploy();
-
-		log.info("流程部署id: {}", deployment.getId());
-		log.info("流程部署名称: {}", deployment.getName());
-	}
+//	// 部署流程
+//	@Deprecated // 自动部署
+//	@Test
+//	public void deploy() {
+//		Deployment deployment = repositoryService
+//			.createDeployment()
+//			.addClasspathResource("complete/activiti/holiday.bpmn")
+//			.key("holiday")
+//			.name("请假申请流程")
+//			.deploy();
+//
+//		log.info("流程部署id: {}", deployment.getId());
+//		log.info("流程部署名称: {}", deployment.getName());
+//	}
 
 	// 启动流程
 	@Test
 	public void startProcess() {
-		RuntimeService runtimeService = processEngine.getRuntimeService();
+		ProcessDefinition definition = repositoryService
+			.createProcessDefinitionQuery().deploymentId(deployment.getId()).singleResult();
 
 		ProcessInstance processInstance
-		= runtimeService.startProcessInstanceByKey("process-3d6fb4f9-0246-4797-bca3-e3eb254a6b44");
+		= runtimeService.startProcessInstanceById(definition.getId());
 
 		log.info("流程定义id: {}", processInstance.getProcessDefinitionId());
 		log.info("流程实例id: {}", processInstance.getProcessInstanceId());
@@ -120,11 +142,9 @@ public class T2003181027 extends AbstractTestNGSpringContextTests {
 	public void findPersonalTaskList() {
 		String assignee = "zhangsan";
 
-		TaskService taskService = processEngine.getTaskService();
-
 		List<Task> taskList = taskService
 			.createTaskQuery()
-			.processDefinitionKey("process-3d6fb4f9-0246-4797-bca3-e3eb254a6b44")
+			.processDefinitionId(processDefinition.getId())
 			.taskAssignee(assignee)
 			.list();
 
@@ -136,24 +156,31 @@ public class T2003181027 extends AbstractTestNGSpringContextTests {
 
 	}
 
-	// 流程任务通过
+	// 流程任务
 	@Test
-	public void completeTask() {
-		TaskService taskService = processEngine.getTaskService();
-		taskService.complete("75006");
+	public void task() {
+		TaskQuery taskQuery = taskService.createTaskQuery().processDefinitionId(processDefinition.getId());
+
+		Task task = taskQuery.singleResult();
+
+		if (task == null) {
+			return;
+		}
+
+		log.debug("任务名称: {}", task.getName());
+		log.debug("任务id: {}", task.getId());
+		log.debug("任务代理人: {}", task.getAssignee());
+		taskService.complete(task.getId());
+
 	}
 
 	// 流程定义查询
 	@Test
 	public void queryProcessDefinition() {
-		String processDefinitionKey = "process-3d6fb4f9-0246-4797-bca3-e3eb254a6b44";
-
-		RepositoryService repositoryService = processEngine.getRepositoryService();
-
 		ProcessDefinitionQuery processDefinitionQuery = repositoryService.createProcessDefinitionQuery();
 
 		List<ProcessDefinition> processDefinitionList = processDefinitionQuery
-			.processDefinitionKey(processDefinitionKey)
+			.processDefinitionId(processDefinition.getId())
 			.orderByProcessDefinitionVersion()
 			.desc()
 			.list();
@@ -168,6 +195,7 @@ public class T2003181027 extends AbstractTestNGSpringContextTests {
 	}
 
 	// 删除流程定义
+	@Deprecated // 见流程清理
 	@Test
 	public void deleteDeployment() {
 		RepositoryService repositoryService = processEngine.getRepositoryService();
@@ -178,11 +206,12 @@ public class T2003181027 extends AbstractTestNGSpringContextTests {
 	// 查询流程实例历史
 	@Test
 	public void queryProcessInstanceHistory() {
-		HistoryService historyService = processEngine.getHistoryService();
+		ProcessInstance processInstance = runtimeService
+			.createProcessInstanceQuery().processDefinitionId(processDefinition.getId()).singleResult();
 
 		List<HistoricActivityInstance> historicActivityInstanceList = historyService
 			.createHistoricActivityInstanceQuery()
-			.processInstanceId("75002")
+			.processInstanceId(processInstance.getProcessInstanceId())
 			.list();
 
 		historicActivityInstanceList.forEach(instance -> {
@@ -195,61 +224,42 @@ public class T2003181027 extends AbstractTestNGSpringContextTests {
 	// 流程定义资源查询
 	@Test
 	public void getProcessResources() throws Exception {
-		String processDefinitionId = "process-3d6fb4f9-0246-4797-bca3-e3eb254a6b44:1:72504";
-
-		RepositoryService repositoryService = processEngine.getRepositoryService();
-
-		ProcessDefinition processDefinition = repositoryService
-			.createProcessDefinitionQuery()
-			.processDefinitionId(processDefinitionId)
-			.singleResult();
-
-		String processDefinitionResourceName = processDefinition.getResourceName();
+		String resourceName = processDefinition.getResourceName();
 
 		String diagramResourceName = processDefinition.getDiagramResourceName();
 
-		log.info("流程定义文件: {}", processDefinitionResourceName);
+		log.info("流程定义文件: {}", resourceName);
 		log.info("流程定义图: {}", diagramResourceName);
 
-		if (StringUtils.isBlank(processDefinitionResourceName)) {
+		if (StringUtils.isBlank(resourceName)) {
 			return;
 		}
 
-		String parentPath = "src/main/resources/";
-		String suffix = "_out";
+		String parentPath = "target/generated-sources/";
 
-		String outputProcessDefinitionFileName = new StringBuilder(processDefinitionResourceName).insert(
-			processDefinitionResourceName.indexOf('.'),
-			suffix
-		).toString();
+		File resourceFile = new File(parentPath + processDefinition.getName());
+		log.debug("目标路径: {}", resourceFile.getAbsolutePath());
 
-		File processDefinitionResourceFile = new File(parentPath + outputProcessDefinitionFileName);
-		log.info("当前父目录: {}", processDefinitionResourceFile.getAbsolutePath());
-		if (!processDefinitionResourceFile.createNewFile()) {
-			return;
+		if (! resourceFile.getParentFile().exists()) {
+			if (! (resourceFile.getParentFile().mkdirs() && resourceFile.createNewFile())) {
+				return;
+			}
 		}
 
 		InputStream resourceAsStream
-			= repositoryService.getResourceAsStream(processDefinition.getDeploymentId(), processDefinitionResourceName);
+			= repositoryService.getResourceAsStream(processDefinition.getDeploymentId(), resourceName);
 
-		FileUtils.copyInputStreamToFile(resourceAsStream, processDefinitionResourceFile);
-//
-//		FileOutputStream fileOutputStream = new FileOutputStream(processDefinitionResourceFile);
-//
-//		try {
-//			byte[] bytes = new byte[1024];
-//			int len = -1;
-//			while ((len = resourceAsStream.read(bytes, 0, bytes.length)) != -1) {
-//				fileOutputStream.write(bytes, 0, len);
-//			}
-//		} finally {
-//			try {
-//				fileOutputStream.close();
-//			} finally {
-//				resourceAsStream.close();
-//			}
-//		}
+		FileUtils.copyInputStreamToFile(resourceAsStream, resourceFile);
 
+	}
+
+	public void clean() {
+		log.debug("清理工作");
+		List<Deployment> list = repositoryService.createDeploymentQuery().list();
+
+		list.forEach(deployment -> {
+			repositoryService.deleteDeployment(deployment.getId(), true);
+		});
 	}
 
 }

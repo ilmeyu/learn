@@ -2,9 +2,6 @@ package com.ilme.t20.t2001;
 
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;
-import sun.launcher.resources.launcher_zh_CN;
-
-import java.lang.reflect.Method;
 
 /**
  * @author ilme
@@ -14,7 +11,7 @@ import java.lang.reflect.Method;
 @Slf4j
 public class T191600 {
 
-	public void test() throws Exception {
+	public void test() {
 		ClassLoader classLoader = ClassLoader.getSystemClassLoader();
 		log.info("{}", classLoader);
 

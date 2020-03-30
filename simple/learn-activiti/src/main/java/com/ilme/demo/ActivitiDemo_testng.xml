@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="Suite: T2003181027" allow-return-values="true">
+<test name="Test: T2003181027">
+	<classes>
+		<class name="com.ilme.demo.ActivitiDemo">
+			<methods>
+				<include name="init" />
+<!--				<include name="deploy" />-->
+				<include name="startProcess" />
+				<include name="findPersonalTaskList" />
+				<include name="task" />
+				<include name="queryProcessDefinition" />
+<!--				<include name="deleteDeployment" />-->
+				<include name="queryProcessInstanceHistory" />
+				<include name="getProcessResources" />
+				<include name="clean" />
+			</methods>
+		</class>
+	</classes>
+</test>
+</suite>
