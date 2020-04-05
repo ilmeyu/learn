@@ -9,10 +9,10 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	
-	<artifactId>learn-activiti</artifactId>
+	<artifactId>simple-activiti</artifactId>
 
 	<properties>
-		<activiti.version>6.0.0</activiti.version>
+		<activiti.version>7.1.0.M6</activiti.version>
 	</properties>
 	
 	<dependencies>
@@ -60,10 +60,10 @@
 			<scope>compile</scope>
 		</dependency>
 		
-		<!-- c3p0 -->
+		<!-- HikariCP -->
 		<dependency>
-			<groupId>com.mchange</groupId>
-			<artifactId>c3p0</artifactId>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
 		</dependency>
 		
 		<!-- mysql-connector-java -->

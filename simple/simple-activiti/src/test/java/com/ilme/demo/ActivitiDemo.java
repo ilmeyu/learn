@@ -1,5 +1,9 @@
 package com.ilme.demo;
 
+import com.ilme.env.DataUtil;
+import com.ilme.env.Holiday;
+import com.ilme.env.User;
+import com.ilme.env.UserType;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.*;
 import org.activiti.engine.history.HistoricActivityInstance;
@@ -10,6 +14,7 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.JavaVersion;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -18,7 +23,10 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * 工作流基础功能测试
@@ -43,12 +51,10 @@ public class ActivitiDemo extends AbstractTestNGSpringContextTests {
 	 * repositoryService 是 activiti 的资源管理类，提供了管理和控制流程发布包和流程定义的操作。<br />
 	 * 使用工作流建模工 具设计的业务流程图需要使用此 service 将流程定义文件的内容部署到计算机。<br />
 	 * 除了部署流程定义以外还可以: <br />
-	 * <ul>
 	 * <li>查询引擎中的发布包和流程定义。</li>
 	 * <li>暂停或激活发布包，对应全部和特定流程定义。 暂停意味着它们不能再执行任何操作了，激活是对应的反向操作。</li>
 	 * <li>获得多种资源，像是包含在发布包里的文件， 或引擎自动生成的流程图。 </li>
 	 * <li>获得流程定义的 pojo 版本， 可以用来通过 java 解析流程，而不必通过 xml。</li>
-	 * </ul>
 	 */
 	@Autowired
 	RepositoryService repositoryService;
@@ -80,17 +86,27 @@ public class ActivitiDemo extends AbstractTestNGSpringContextTests {
 	@Autowired
 	ManagementService managementService;
 
+	/**
+	 * 流程部署信息
+	 */
 	Deployment deployment;
 
+	/**
+	 * 流程定义信息
+	 */
 	ProcessDefinition processDefinition;
 
-	@Test
+	/**
+	 * 流程实例信息
+	 */
+	ProcessInstance processInstance;
+
 	public void init() {
 		log.debug("工作流启动成功");
 
 		deployment = repositoryService
 			.createDeploymentQuery()
-			.processDefinitionKey("process-3d6fb4f9-0246-4797-bca3-e3eb254a6b44")
+			.processDefinitionKey("process-db6c1bd3-3a90-47fa-9603-325416601f2d")
 			.singleResult();
 
 		if (deployment == null) {
@@ -123,29 +139,34 @@ public class ActivitiDemo extends AbstractTestNGSpringContextTests {
 //		log.info("流程部署名称: {}", deployment.getName());
 //	}
 
-	// 启动流程
-	@Test
-	public void startProcess() {
-		ProcessDefinition definition = repositoryService
-			.createProcessDefinitionQuery().deploymentId(deployment.getId()).singleResult();
+	// 创建流程
+	public void createProcess() {
+		// 业务key关联实际业务
+		String business = UUID.randomUUID().toString().replace("-", "");
 
-		ProcessInstance processInstance
-		= runtimeService.startProcessInstanceById(definition.getId());
+		User user = DataUtil.getUserByTypeSingleResult(UserType.STAFF);
+
+		Map<String, Object> variables = new HashMap<>();
+		variables.put("user", user);
+
+		processInstance = runtimeService.startProcessInstanceById(processDefinition.getId(), business, variables);
 
 		log.info("流程定义id: {}", processInstance.getProcessDefinitionId());
 		log.info("流程实例id: {}", processInstance.getProcessInstanceId());
-		log.info("当前活动id: {}", processInstance.getActivityId());
+		log.info("流程活动id: {}", processInstance.getActivityId());
+		log.info("流程业务key: {}", processInstance.getBusinessKey());
+		log.info("流程参数: {}", processInstance.getProcessVariables());
 	}
 
 	// 查询任务列表
-	@Test
-	public void findPersonalTaskList() {
-		String assignee = "zhangsan";
+	public void taskList() {
+
+		User staff = DataUtil.getUserByTypeSingleResult(UserType.STAFF);
 
 		List<Task> taskList = taskService
 			.createTaskQuery()
 			.processDefinitionId(processDefinition.getId())
-			.taskAssignee(assignee)
+			.taskAssignee(staff.getName())
 			.list();
 
 		taskList.forEach(task -> {
@@ -156,26 +177,43 @@ public class ActivitiDemo extends AbstractTestNGSpringContextTests {
 
 	}
 
-	// 流程任务
-	@Test
-	public void task() {
-		TaskQuery taskQuery = taskService.createTaskQuery().processDefinitionId(processDefinition.getId());
-
+	// 流程任务处理
+	public void holidayTaskHandler() {
+		// 员工
+		User staff = DataUtil.getUserByTypeSingleResult(UserType.STAFF);
+		// 经理
+		User manager = DataUtil.getUserByTypeSingleResult(UserType.MANAGER);
+		// 总经理
+		User gm = DataUtil.getUserByTypeSingleResult(UserType.GM);
+		// 人事
+		User hr = DataUtil.getUserByTypeSingleResult(UserType.HR);
+		// 当前流程任务查询器
+		TaskQuery taskQuery = taskService.createTaskQuery().processInstanceId(processInstance.getProcessInstanceId());
 		Task task = taskQuery.singleResult();
 
-		if (task == null) {
-			return;
-		}
+		Holiday holiday = Holiday.builder().id(1000001).reason("请假理由").days(5).userId(staff.getId()).build();
 
-		log.debug("任务名称: {}", task.getName());
-		log.debug("任务id: {}", task.getId());
-		log.debug("任务代理人: {}", task.getAssignee());
+		Map<String, Object> variables = new HashMap<>();
+		variables.put("holiday", holiday);
+
+		// 填写申请单
+		taskService.setAssignee(task.getId(), String.valueOf(staff.getId()));
+		taskService.complete(task.getId(), variables);
+		// 经理审批
+		task = taskQuery.singleResult();
+		taskService.setAssignee(task.getId(), String.valueOf(manager.getId()));
 		taskService.complete(task.getId());
-
+		// 总经理审批
+		task = taskQuery.singleResult();
+		taskService.setAssignee(task.getId(), String.valueOf(gm.getId()));
+		taskService.complete(task.getId());
+		// 人事
+		task = taskQuery.singleResult();
+		taskService.setAssignee(task.getId(), String.valueOf(hr.getId()));
+		taskService.complete(task.getId());
 	}
 
 	// 流程定义查询
-	@Test
 	public void queryProcessDefinition() {
 		ProcessDefinitionQuery processDefinitionQuery = repositoryService.createProcessDefinitionQuery();
 
@@ -186,7 +224,6 @@ public class ActivitiDemo extends AbstractTestNGSpringContextTests {
 			.list();
 
 		processDefinitionList.forEach(definition -> {
-			log.info("===================================");
 			log.info("流程部署id: {}", definition.getDeploymentId());
 			log.info("流程定义id: {}", definition.getId());
 			log.info("流程定义key: {}", definition.getKey());
@@ -194,35 +231,36 @@ public class ActivitiDemo extends AbstractTestNGSpringContextTests {
 		});
 	}
 
-	// 删除流程定义
-	@Deprecated // 见流程清理
-	@Test
-	public void deleteDeployment() {
-		RepositoryService repositoryService = processEngine.getRepositoryService();
-
-		repositoryService.deleteDeployment("1");
-	}
+//	// 删除流程定义
+//	@Deprecated // 见流程清理
+//	@Test
+//	public void deleteDeployment() {
+//		RepositoryService repositoryService = processEngine.getRepositoryService();
+//
+//		repositoryService.deleteDeployment("1");
+//	}
 
 	// 查询流程实例历史
-	@Test
 	public void queryProcessInstanceHistory() {
-		ProcessInstance processInstance = runtimeService
-			.createProcessInstanceQuery().processDefinitionId(processDefinition.getId()).singleResult();
-
 		List<HistoricActivityInstance> historicActivityInstanceList = historyService
 			.createHistoricActivityInstanceQuery()
 			.processInstanceId(processInstance.getProcessInstanceId())
 			.list();
 
 		historicActivityInstanceList.forEach(instance -> {
-			log.info("流程实例id: {}", instance.getActivityId());
-			log.info("流程实例名称: {}", instance.getActivityName());
-			log.info("审批人: {}", instance.getAssignee());
+			log.debug("流程实例id: {}", instance.getActivityId());
+			log.debug("任务id: {}", instance.getTaskId());
+			log.debug("流程实例名称: {}", instance.getActivityName());
+
+			if (StringUtils.isNotBlank(instance.getAssignee())) {
+				log.debug("代理人信息: {}", DataUtil.getUserById(Integer.valueOf(instance.getAssignee())));
+			}
+
+			log.debug("--------------------------");
 		});
 	}
 
-	// 流程定义资源查询
-	@Test
+	// 获取流程定义资源
 	public void getProcessResources() throws Exception {
 		String resourceName = processDefinition.getResourceName();
 

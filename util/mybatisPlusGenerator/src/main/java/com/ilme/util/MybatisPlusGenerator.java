@@ -15,7 +15,7 @@ public class MybatisPlusGenerator {
 
 	public static void main(String[] args) {
 
-		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("common/MybatisPlusGenerator_application.xml");
+		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("mybatisPlusGenerator_application.xml");
 
 		AutoGenerator autoGenerator = applicationContext.getBean(AutoGenerator.class);
 

@@ -12,8 +12,9 @@
 	<artifactId>simple</artifactId>
 	<packaging>pom</packaging>
 	<modules>
-		<module>learn-activiti</module>
+		<module>simple-activiti</module>
+		<module>simple-spring</module>
 	</modules>
-
+	
 
 </project>

@@ -21,15 +21,18 @@ import java.util.Map;
 @Slf4j
 public class T191932 {
 
-	static final String FILE = "TEMP/T191932_test.html";
+	static final String FILE = "target/generated-sources/T191932_test.html";
 	static final String SUFFIX = ".html";
 	static final String TEMPLATE = "t202002/T191932_test";
 
 	static {
 		File file = new File(FILE);
-		if (!file.exists()) {
+		if (!file.getParentFile().exists()) {
 			try {
-				file.createNewFile();
+				if (file.mkdirs() && file.exists()) {
+					file.createNewFile();
+					log.debug("filepath: {}", file.getAbsolutePath());
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
