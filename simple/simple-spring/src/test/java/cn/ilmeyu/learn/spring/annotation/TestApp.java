@@ -3,7 +3,6 @@ package cn.ilmeyu.learn.spring.annotation;
 import cn.ilmeyu.learn.spring.annotation.bean.Person;
 import cn.ilmeyu.learn.spring.annotation.config.MainConfig;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.testng.annotations.Test;
 
@@ -16,21 +15,24 @@ import org.testng.annotations.Test;
 @Slf4j
 public class TestApp {
 
-	public void demo1() {
-		ApplicationContext context = new AnnotationConfigApplicationContext(MainConfig.class);
+	/**
+	 * bean扫描策略
+	 */
+	public void testBeanScan() {
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MainConfig.class);
 		Person person = context.getBean(Person.class);
 
 		log.debug("{}", person);
-	}
+		log.debug("{}\t{}", context.getBean(Person.class), context.getBean(Person.class));
 
-	public void demo2() {
-		ApplicationContext context = new AnnotationConfigApplicationContext(MainConfig.class);
 		String[] beanNames = context.getBeanDefinitionNames();
 
 		log.debug("==== beans =====");
 		for (String beanName : beanNames) {
 			log.debug("{}", beanName);
 		}
+
+		context.close();
 	}
 
 }

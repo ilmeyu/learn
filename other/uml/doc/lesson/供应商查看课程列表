@@ -1,0 +1,30 @@
+```` puml
+@startuml
+
+title 供应商查看课程列表
+
+actor "供应商用户" as user
+participant "供应商平台" as cpm
+participant "供应商中心" as vc
+
+activate user
+user -> cpm: 查看课程列表
+deactivate user
+activate cpm
+cpm -> cpm: 参数校验转换
+cpm -> vc: 请求参数
+deactivate cpm
+activate vc
+vc -> vc: 查询该供应商对应的课程
+vc -> vc: 组装查询条件
+vc -> vc: 分页查询课程
+vc -> cpm: 返回结果
+deactivate vc
+activate cpm
+cpm -> cpm: 拼装dto
+cpm -> user: 返回数据
+deactivate cpm
+activate user
+
+@enduml
+````

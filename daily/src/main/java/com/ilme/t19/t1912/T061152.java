@@ -14,8 +14,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 @Slf4j
 public class T061152 {
 
-	public static void main(String[] args) throws InterruptedException {
-		BlockingQueue<Integer> blockingQueue = new LinkedBlockingQueue();
+	public static void main(String[] args) {
+		BlockingQueue blockingQueue = new LinkedBlockingQueue<Integer>();
 
 		for (int i = 0; i < 10; i++) {
 			new Thread(new T(blockingQueue)).start();

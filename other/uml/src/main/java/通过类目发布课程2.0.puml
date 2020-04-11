@@ -1,0 +1,92 @@
+@startuml
+
+title 通过类目发布课程
+
+actor 运营 as user
+participant "运营平台" as bom
+participant "供应商中心" as vc
+participant "类目中心" as category
+participant "用户中心" as uc
+participant "消息中心" as mc
+actor "供应商平台" as cpm
+
+activate user
+user -> bom: 提交课程
+deactivate user
+
+activate bom
+bom -> bom: 参数校验/转换
+bom -> vc: 请求供应商中心
+deactivate bom
+activate vc
+vc -> vc: 参数校验/转换
+vc -> vc: 保存数据
+vc --> bom: 操作成功
+deactivate vc
+activate bom
+bom --> user: 保存成功
+deactivate bom
+
+activate user
+user -> bom: 根据类目发布课程
+deactivate user
+activate bom
+bom -> bom: 参数校验/转换
+bom -> category: 类目ids [1/2/3] 级类目
+deactivate bom
+activate category
+category -> category: 获取四级类目
+category --> bom: 返回结果
+deactivate category
+
+activate bom
+bom -> bom: 抽取所有四级类目id
+bom -> vc: 四级类目ids
+deactivate bom
+activate vc
+vc -> vc: 通过类目筛选毛利率
+vc --> bom: 返回毛利率数据
+deactivate vc
+
+activate bom
+bom -> bom: 提取供应商id并去重
+
+bom -> vc: 记录供应商与课程关系
+deactivate bom
+activate vc
+vc -> vc: 参数校验/转换
+vc -> vc: 写入供应商课程关系
+vc -> vc:  更新课程状态与发布类型
+vc --> bom: 操作成功
+deactivate vc
+
+activate bom
+bom -> uc: 供应商id集合
+deactivate bom
+activate uc
+uc -> uc: 查询供应商对应的用户
+uc --> bom: 返回结果集
+deactivate uc
+activate bom
+bom -> bom: 设置消息体
+bom -> bom: 提取用户id与供应商并匹配
+bom -> bom: 拼装发布对象 [供应商id、供应商名称、用户id]
+bom -> mc: 请求消息中心
+deactivate bom
+
+activate mc
+mc -> mc: 创建定时任务
+mc --> bom: 创建成功
+activate bom
+mc -> mc: 5分钟后触发定时任务
+mc -> cpm: 开始推送站内信
+deactivate mc
+
+activate cpm
+cpm -> cpm: 收到课程发布提醒
+bom --> user: 发布成功
+deactivate bom
+
+activate user
+
+@enduml

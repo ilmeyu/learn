@@ -5,8 +5,7 @@
 	<classes>
 		<class name="cn.ilmeyu.learn.spring.annotation.TestApp">
 			<methods>
-<!--				<include name="demo1" />-->
-				<include name="demo2" />
+				<include name="testBeanScan" />
 			</methods>
 		</class>
 	</classes>

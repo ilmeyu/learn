@@ -1,0 +1,42 @@
+@startuml
+
+title 发布课程到所有供应商
+
+actor 运营 as user
+participant "运营平台" as bom
+participant "供应商中心" as vc
+participant "消息中心" as mc
+actor "供应商用户" as cpm
+
+activate user
+user -> bom: 发布课程
+deactivate user
+activate bom
+bom -> vc: 记录供应商与课程关系
+deactivate bom
+activate vc
+vc -> vc: 参数校验/转换
+vc -> vc: 更新课程状态与发布类型
+vc --> bom: 操作成功
+deactivate vc
+
+activate bom
+bom -> mc: 请求消息中心
+deactivate bom
+
+activate mc
+mc -> mc: 创建定时任务
+mc --> bom: 创建成功
+activate bom
+mc -> mc: 5分钟后触发定时任务
+mc -> cpm: 开始推送站内信
+deactivate mc
+
+activate cpm
+cpm -> cpm: 收到课程发布提醒
+bom --> user: 发布成功
+deactivate bom
+
+activate user
+
+@enduml
