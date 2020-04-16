@@ -36,7 +36,7 @@ public class T082010 {
 		private Singleton() {}
 
 		private static class SingletonInstance {
-			private static Singleton SINGLETON = new Singleton();
+			private static final Singleton SINGLETON = new Singleton();
 		}
 
 		public static Singleton getInstance() {

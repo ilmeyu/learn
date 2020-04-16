@@ -23,7 +23,7 @@ public class T212152 {
 
 	RedisTemplate<String, String> redisTemplate;
 
-	final static String SPRING_CONFIG = "t202002/T212152_applicationContext.xml";
+	final static String SPRING_CONFIG = "t20/t2002/T212152_applicationContext.xml";
 
 	public static void main(String[] args) {
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext(SPRING_CONFIG);

@@ -2,10 +2,6 @@ package com.ilme.t20.t2001;
 
 import com.ilme.utils.DataUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.testng.annotations.Test;
-
-import java.util.Arrays;
-import java.util.Queue;
 
 /**
  * 快速排序
@@ -28,7 +24,7 @@ public class T221433 {
 //		Qsort(arr, 0, arr.length - 1);
 	}
 
-	public static void quickSort(int arr[], int low, int high) {
+	public static void quickSort(int[] arr, int low, int high) {
 		if (high - low < 1) {
 			return;
 		}
@@ -55,7 +51,7 @@ public class T221433 {
 		quickSort(arr, low, h);
 	}
 
-	static void Qsort(int arr[], int left, int right)
+	static void Qsort(int[] arr, int left, int right)
 	{
 		if(left >= right)
 			return;

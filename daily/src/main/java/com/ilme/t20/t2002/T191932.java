@@ -23,7 +23,7 @@ public class T191932 {
 
 	static final String FILE = "target/generated-sources/T191932_test.html";
 	static final String SUFFIX = ".html";
-	static final String TEMPLATE = "t202002/T191932_test";
+	static final String TEMPLATE = "t20/t2002/T191932_test";
 
 	static {
 		File file = new File(FILE);

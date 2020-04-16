@@ -26,7 +26,7 @@ public class T012032 {
 		school.show();
 	}
 
-	static interface School {
+	interface School {
 		void add(School school);
 
 		void show();

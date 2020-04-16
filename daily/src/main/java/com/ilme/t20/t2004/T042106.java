@@ -1,6 +1,7 @@
 package com.ilme.t20.t2004;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -24,34 +25,34 @@ public class T042106 {
 		log.debug("{}", person);
 	}
 
-}
+	@Configuration
+	static class Config {
 
-@Configuration
-class Config {
+		@Bean
+		public Person person() {
+			return new Person( "张三", 10 );
+		}
 
-	@Bean
-	public Person person() {
-		return new Person("张三", 10);
 	}
 
-}
+	@Data
+	@AllArgsConstructor
+	static class Person {
 
-@Data
-@AllArgsConstructor
-class Person {
+		String name;
 
-	String name;
+		Integer age;
 
-	Integer age;
+	}
 
-}
+	@Data
+	@AllArgsConstructor
+	static class Book {
 
-@Data
-@AllArgsConstructor
-class Book {
+		String name;
 
-	String name;
+		Integer price;
 
-	Integer price;
+	}
 
 }

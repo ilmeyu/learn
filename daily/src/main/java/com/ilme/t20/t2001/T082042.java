@@ -20,6 +20,6 @@ public class T082042 {
 	}
 
 	enum Singleton {
-		INSTANCE;
+		INSTANCE
 	}
 }

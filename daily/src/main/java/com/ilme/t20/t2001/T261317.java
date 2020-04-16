@@ -14,10 +14,10 @@ import java.util.Arrays;
 public class T261317 {
 
 	public static void main(String[] args) {
-		char source[] = "jjjjjjtjj".toCharArray();
-		char target[] = "jjjjjjjpj".toCharArray();
+		char[] source = "jjjjjjtjj".toCharArray();
+		char[] target = "jjjjjjjpj".toCharArray();
 
-		int t[][] = new int[target.length][source.length];
+		int[][] t = new int[target.length][source.length];
 
 		process(t, target, source);
 
@@ -29,7 +29,7 @@ public class T261317 {
 		log.info("最长公共子串: {}", max(t));
 	}
 
-	public static int max(int arr[][]) {
+	public static int max(int[][] arr) {
 		int max = arr[0][0];
 
 		for (int[] ints : arr) {
@@ -43,7 +43,7 @@ public class T261317 {
 		return max;
 	}
 
-	public static void process(int t[][], char target[], char source[]) {
+	public static void process(int[][] t, char[] target, char[] source) {
 		for (int i = 0; i < target.length; i++) {
 			for (int j = 0; j < source.length; j++) {
 				if (source[j] == target[i]) {
