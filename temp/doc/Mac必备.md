@@ -1,6 +1,7 @@
 ## 破解软件
 
 > macOS 10.15 Catalina xxx.app已损坏，无法打开，你应该将它移到废纸篓解决方法
+> 
 > [原文链接](https://macwk.com/article/mac-catalina-1015-file-damage)
 
 更新macOS 10.15 Catalina后，很多在10.14上可以使用的App都会提示提示【xxx已损坏，无法打开，你应该将它移到废纸篓解决办法】，
