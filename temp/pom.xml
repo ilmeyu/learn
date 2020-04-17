@@ -11,5 +11,18 @@
 	
 	<artifactId>temp</artifactId>
 
+	<dependencies>
+		<!-- com.ilme.common -->
+		<dependency>
+			<groupId>com.ilme</groupId>
+			<artifactId>common</artifactId>
+		</dependency>
+		
+		<!-- spring context -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+	</dependencies>
 
 </project>

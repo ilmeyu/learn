@@ -1,47 +1,45 @@
 # IOC-容器的基本实现
 
-  * [概述](#概述)
-  * [容器的基本用法](#容器的基本用法)
-  * [功能分析](#功能分析)
-  * [工程搭建](#工程搭建)
-     * [beans包的层级结构](#beans包的层级结构)
-     * [核心类介绍](#核心类介绍)
-        * [DefaultListableBeanFactory](#defaultlistablebeanfactory)
-        * [XmlBeanDefinitionReader](#xmlbeandefinitionreader)
-  * [容器的基础XmlBeanFactory](#容器的基础xmlbeanfactory)
-  * [配置文件的封装](#配置文件的封装)
-        * [ClassPathResource.java](#classpathresourcejava)
-        * [FileSystemResource.java](#filesystemresourcejava)
-        * [XmlBeanFactory.java](#xmlbeanfactoryjava)
-  * [bean加载](#bean加载)
-  * [获取XML的验证模式](#获取xml的验证模式)
-     * [DTD和XSD区别](#dtd和xsd区别)
-     * [验证模式的读取](#验证模式的读取)
-  * [获取Document](#获取document)
-  * [EntityResolver 的用法](#entityresolver-的用法)
-  * [解析及注册BeanDefinitions](#解析及注册beandefinitions)
-  * [profile的用法](#profile的用法)
+> 本文整理自：[原文地址](https://www.cnblogs.com/java-chen-hao/p/11113340.html)
+
+* [概述](#概述)
+* [容器的基本用法](#容器的基本用法)
+* [功能分析](#功能分析)
+* [工程搭建](#工程搭建)
+    * [beans包的层级结构](#beans包的层级结构)
+    * [核心类介绍](#核心类介绍)
+    * [DefaultListableBeanFactory](#defaultlistablebeanfactory)
+    * [XmlBeanDefinitionReader](#xmlbeandefinitionreader)
+* [容器的基础XmlBeanFactory](#容器的基础xmlbeanfactory)
+* [配置文件的封装](#配置文件的封装)
+    * [ClassPathResource.java](#classpathresourcejava)
+    * [FileSystemResource.java](#filesystemresourcejava)
+    * [XmlBeanFactory.java](#xmlbeanfactoryjava)
+* [bean加载](#bean加载)
+* [获取XML的验证模式](#获取xml的验证模式)
+    * [DTD和XSD区别](#dtd和xsd区别)
+    * [验证模式的读取](#验证模式的读取)
+* [获取Document](#获取document)
+* [EntityResolver 的用法](#entityresolver-的用法)
+* [解析及注册BeanDefinitions](#解析及注册beandefinitions)
+* [profile的用法](#profile的用法)
 
 ## 概述
 
-上一篇我们搭建完Spring源码阅读环境, 这篇我们开始真正的阅读Spring的源码，分析spring的源码之前我们先来简单回顾下spring核心功能的简单使用
-
-> 文章整理自[原文地址](https://www.cnblogs.com/java-chen-hao/p/11113340.html)
+> 上一篇 [整体架构和环境搭建](../整体架构和环境搭建/整体架构和环境搭建.md) 我们搭建完spring源码阅读环境，这篇我们开始真正的阅读spring的源码，分析spring的源码之前我们先来简单回顾下spring核心功能的简单使用
 
 ## 容器的基本用法
 
 bean是spring最核心的东西，spring就像是一个大水桶，而bean就是水桶中的水，水桶脱离了水也就没有什么用处了，我们简单看下bean的定义，代码如下：
 
 ```java
-public class MyTestBean {
-    private String name = "ChenHao";
-
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
+@Getter
+@Setter
+@ToString
+public class User {
+    private String id;
+    private String userName;
+    private String email;
 }
 ```
 
@@ -54,8 +52,12 @@ public class MyTestBean {
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-
-    <bean id="myTestBean" class="com.chenhao.spring.MyTestBean"/>
+	
+	<bean id="user" class="cn.ilmeyu.learn.spring.beans.User">
+		<property name="id" value="100001" />
+		<property name="email" value="www.email.ilmeyu" />
+		<property name="userName" value="张三" />
+	</bean>
 
 </beans>
 ```
@@ -65,41 +67,45 @@ public class MyTestBean {
 具体测试代码如下：
 
 ```java
-public class AppTest {
-    @Test
-    public void MyTestBeanTest() {
-        BeanFactory bf = new XmlBeanFactory( new ClassPathResource("spring-config.xml"));
-        MyTestBean myTestBean = (MyTestBean) bf.getBean("myTestBean");
-        System.out.println(myTestBean.getName());
+public class App {
+    public static void main( String[] args ) {
+        BeanFactory beanFactory = new XmlBeanFactory( new ClassPathResource( "application.xml" ) );
+        User bean = beanFactory.getBean( User.class );
+        System.out.println( bean );
     }
 }
 ```
 
-运行上述测试代码就可以看到输出结果如下图：
+运行上述测试代码就可以看到控制台输出结果如下：
 
-![测试结果](img/测试结果.png) 
+```text
+23:04:47.866 [main] DEBUG org.springframework.beans.factory.xml.XmlBeanDefinitionReader - Loaded 1 bean definitions from class path resource [application.xml]
+23:04:47.874 [main] DEBUG org.springframework.beans.factory.xml.XmlBeanFactory - Creating shared instance of singleton bean 'user'
+User(id=100001, userName=张三, email=www.email.ilmeyu)
 
-> 其实直接使用BeanFactory作为容器对于Spring的使用并不多见，因为企业级应用项目中大多会使用的是ApplicationContext（后面我们会讲两者的区别，这里只是测试）
+Process finished with exit code 0
+```
+
+> 其实直接使用 `BeanFactory` 作为容器对于spring的使用并不多见，因为企业级应用项目中大多会使用的是 `ApplicationContext` （后面我们会讲两者的区别，这里只是测试）
 
 ## 功能分析
 
-接下来我们分析2中代码完成的功能；
-
-- 读取配置文件spring-config.xml。 
-- 根据spring-config.xml中的配置找到对应的类的配置，并实例化。 
-- 调用实例化后的实例 
+> 接下来我们分析刚才代码完成的功能
+> 1. 读取配置文件 `application.xml`
+> 2. 根据 `application.xml` 中的配置找到对应的类的配置，并实例化
+> 3. 调用实例化后的实例
 
 下图是一个最简单spring功能架构，如果想完成我们预想的功能，至少需要3个类：
 
 ![基本架构](img/基本架构.png)
 
-> - `ConfigReader` 用于读取及验证自己直文件 我们妥用配直文件里面的东西，当然首先 要做的就是读取，然后放直在内存中.
-> - `ReflectionUtil` 用于根据配置文件中的自己直进行反射实例化,比如在上例中 spring-config.xml 出现的<bean id="myTestBean" class="com.chenhao.spring.MyTestBean"/>，我们就可以根据 com.chenhao.spring.MyTestBean 进行实例化。
+> - `ConfigReader` 用于读取及验证自己配置文件，我们妥用配直文件里面的东西，当然首先要做的就是读取，然后放直在内存中.
+> - `ReflectionUtil` 用于根据配置文件中的自己直进行反射实例化,比如在上例中 application.xml 出现的 `<bean id="user" class="cn.ilmeyu.learn.spring.beans.User" />` ，我们就可以根据 `cn.ilmeyu.learn.spring.beans.User` 进行实例化。
 > - `App` 用于完成整个逻辑的串联。
 
 ## 工程搭建
 
-spring的源码中用于实现上面功能的是spring-bean这个工程，所以我们接下来看这个工程，当然spring-core是必须的。
+> spring的源码中用于实现上面功能的是spring-bean这个工程，所以我们接下来看这个工程，当然spring-core是必须的。
 
 ### beans包的层级结构
 
@@ -107,18 +113,18 @@ spring的源码中用于实现上面功能的是spring-bean这个工程，所以
 
 ![例子结构](img/例子结构.png)
 
-> - src/main/java 用于展现Spring的主要逻辑 
-> - src/main/resources 用于存放系统的配置文件 
-> - src/test/java 用于对主要逻辑进行单元测试 
-> - src/test/resources 用于存放测试用的配置文件
+- src/main/java 用于展现Spring的主要逻辑 
+- src/main/resources 用于存放系统的配置文件 
+- src/test/java 用于对主要逻辑进行单元测试 
+- src/test/resources 用于存放测试用的配置文件
 
 ### 核心类介绍
 
-接下来我们先了解下spring-bean最核心的两个类：`DefaultListableBeanFactory`和`XmlBeanDefinitionReader`
+接下来我们先了解下spring-bean最核心的两个类：`DefaultListableBeanFactory` 和 `XmlBeanDefinitionReader`
 
 #### DefaultListableBeanFactory
 
-XmlBeanFactory继承自DefaultListableBeanFactory，而DefaultListableBeanFactory是整个bean加载的核心部分，是Spring注册及加载bean的默认实现，而对于XmlBeanFactory与DefaultListableBeanFactory不同的地方其实是在XmlBeanFactory中使用了自定义的XML读取器XmlBeanDefinitionReader，实现了个性化的BeanDefinitionReader读取，DefaultListableBeanFactory继承了AbstractAutowireCapableBeanFactory并实现了ConfigurableListableBeanFactory以及BeanDefinitionRegistry接口。以下是ConfigurableListableBeanFactory的层次结构图以下相关类图
+&emsp;&emsp;XmlBeanFactory继承自DefaultListableBeanFactory，而DefaultListableBeanFactory是整个bean加载的核心部分，是Spring注册及加载bean的默认实现，而对于XmlBeanFactory与DefaultListableBeanFactory不同的地方其实是在XmlBeanFactory中使用了自定义的XML读取器XmlBeanDefinitionReader，实现了个性化的BeanDefinitionReader读取，DefaultListableBeanFactory继承了AbstractAutowireCapableBeanFactory并实现了ConfigurableListableBeanFactory以及BeanDefinitionRegistry接口。以下是ConfigurableListableBeanFactory的层次结构图以下相关类图
 
 ![DefaultListableBeanFactory](img/DefaultListableBeanFactory.png)
 
@@ -167,7 +173,7 @@ XML配置文件的读取是Spring中重要的功能，因为Spring的大部分�
 通过上面的内容我们对spring的容器已经有了大致的了解，接下来我们详细探索每个步骤的详细实现，接下来要分析的功能都是基于如下代码：
 
 ```java
-BeanFactory bf = new XmlBeanFactory( new ClassPathResource("spring-config.xml"));
+BeanFactory bf = new XmlBeanFactory( new ClassPathResource("application.xml"));
 ```
 
 > 首先调用ClassPathResource的构造函数来构造Resource资源文件的实例对象，这样后续的资源处理就可以用Resource提供的各种服务来操作了。有了Resource后就可以对BeanFactory进行初始化操作，那配置文件是如何封装的呢？
@@ -216,7 +222,7 @@ public interface Resource extends InputStreamSource {
 在日常开发中我们可以直接使用spring提供的类来加载资源文件，比如在希望加载资源文件时可以使用下面的代码：
 
 ```java
-Resource resource = new ClassPathResource("spring-config.xml");
+Resource resource = new ClassPathResource("application.xml");
 InputStream is = resource.getInputStream();
 ```
 
