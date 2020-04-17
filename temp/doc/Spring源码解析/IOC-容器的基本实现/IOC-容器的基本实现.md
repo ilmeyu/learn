@@ -69,8 +69,8 @@ public class AppTest {
 
 下图是一个最简单spring功能架构，如果想完成我们预想的功能，至少需要3个类：
 
-> ![基本架构](img/基本架构.png)
+![基本架构](img/基本架构.png)
 
-- ConfigReader 用于读取及验证自己直文件 我们妥用配直文件里面的东西，当然首先 要做的就是读取，然后放直在内存中.
-- ReflectionUtil 用于根据配置文件中的自己直进行反射实例化,比如在上例中 spring-config.xml 出现的<bean id="myTestBean" class="com.chenhao.spring.MyTestBean"/>，我们就可以根据 com.chenhao.spring.MyTestBean 进行实例化。
-- App 用于完成整个逻辑的串联。
+> - ConfigReader 用于读取及验证自己直文件 我们妥用配直文件里面的东西，当然首先 要做的就是读取，然后放直在内存中.
+> - ReflectionUtil 用于根据配置文件中的自己直进行反射实例化,比如在上例中 spring-config.xml 出现的<bean id="myTestBean" class="com.chenhao.spring.MyTestBean"/>，我们就可以根据 com.chenhao.spring.MyTestBean 进行实例化。
+> - App 用于完成整个逻辑的串联。
