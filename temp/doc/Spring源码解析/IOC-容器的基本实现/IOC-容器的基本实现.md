@@ -124,7 +124,7 @@ Process finished with exit code 0
 
 #### DefaultListableBeanFactory
 
-&emsp;&emsp;XmlBeanFactory继承自DefaultListableBeanFactory，而DefaultListableBeanFactory是整个bean加载的核心部分，是Spring注册及加载bean的默认实现，而对于XmlBeanFactory与DefaultListableBeanFactory不同的地方其实是在XmlBeanFactory中使用了自定义的XML读取器XmlBeanDefinitionReader，实现了个性化的BeanDefinitionReader读取，DefaultListableBeanFactory继承了AbstractAutowireCapableBeanFactory并实现了ConfigurableListableBeanFactory以及BeanDefinitionRegistry接口。以下是ConfigurableListableBeanFactory的层次结构图以下相关类图
+&emsp;&emsp;XmlBeanFactory 继承自 `DefaultListableBeanFactory` ，而 `DefaultListableBeanFactory` 是整个bean加载的核心部分，是Spring注册及加载bean的默认实现，而对于 `XmlBeanFactory` 与 `DefaultListableBeanFactory` 不同的地方其实是在 `XmlBeanFactory` 中使用了自定义的XML读取器 `XmlBeanDefinitionReader` ，实现了个性化的 `BeanDefinitionReader` 读取， `DefaultListableBeanFactory` 继承了 `AbstractAutowireCapableBeanFactory` 并实现了 `ConfigurableListableBeanFactory` 以及 `BeanDefinitionRegistry` 接口。以下是 `ConfigurableListableBeanFactory` 的层次结构图以下相关类图
 
 ![DefaultListableBeanFactory](img/DefaultListableBeanFactory.png)
 
