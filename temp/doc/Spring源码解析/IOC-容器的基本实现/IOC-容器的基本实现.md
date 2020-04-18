@@ -124,7 +124,7 @@ Process finished with exit code 0
 
 #### DefaultListableBeanFactory
 
-&emsp;&emsp;XmlBeanFactory 继承自 `DefaultListableBeanFactory` ，而 `DefaultListableBeanFactory` 是整个bean加载的核心部分，是Spring注册及加载bean的默认实现，而对于 `XmlBeanFactory` 与 `DefaultListableBeanFactory` 不同的地方其实是在 `XmlBeanFactory` 中使用了自定义的XML读取器 `XmlBeanDefinitionReader` ，实现了个性化的 `BeanDefinitionReader` 读取， `DefaultListableBeanFactory` 继承了 `AbstractAutowireCapableBeanFactory` 并实现了 `ConfigurableListableBeanFactory` 以及 `BeanDefinitionRegistry` 接口。以下是 `ConfigurableListableBeanFactory` 的层次结构图以下相关类图
+> `XmlBeanFactory` 继承自 `DefaultListableBeanFactory` ，而 `DefaultListableBeanFactory` 是整个bean加载的核心部分，是Spring注册及加载bean的默认实现，而对于 `XmlBeanFactory` 与 `DefaultListableBeanFactory` 不同的地方其实是在 `XmlBeanFactory` 中使用了自定义的XML读取器 `XmlBeanDefinitionReader` ，实现了个性化的 `BeanDefinitionReader` 读取， `DefaultListableBeanFactory` 继承了 `AbstractAutowireCapableBeanFactory` 并实现了 `ConfigurableListableBeanFactory` 以及 `BeanDefinitionRegistry` 接口。以下是 `ConfigurableListableBeanFactory` 的层次结构图以下相关类图
 
 ![DefaultListableBeanFactory](img/DefaultListableBeanFactory.png)
 
@@ -176,7 +176,7 @@ XML配置文件的读取是Spring中重要的功能，因为Spring的大部分�
 BeanFactory bf = new XmlBeanFactory( new ClassPathResource("application.xml"));
 ```
 
-> 首先调用ClassPathResource的构造函数来构造Resource资源文件的实例对象，这样后续的资源处理就可以用Resource提供的各种服务来操作了。有了Resource后就可以对BeanFactory进行初始化操作，那配置文件是如何封装的呢？
+首先调用ClassPathResource的构造函数来构造Resource资源文件的实例对象，这样后续的资源处理就可以用Resource提供的各种服务来操作了。有了Resource后就可以对BeanFactory进行初始化操作，那配置文件是如何封装的呢？
 
 ## 配置文件的封装 
 
@@ -186,6 +186,7 @@ Spring的配置文件读取是通过ClassPathResource进行封装的，Spring对
 public interface InputStreamSource {
     InputStream getInputStream() throws IOException;
 }
+
 public interface Resource extends InputStreamSource {
     boolean exists();
     default boolean isReadable() {
@@ -211,11 +212,11 @@ public interface Resource extends InputStreamSource {
 }
 ```
 
->  InputStreamSource封装任何能返回InputStream的类，比如File、Classpath下的资源和Byte Array等， 它只有一个方法定义：getInputStream()，该方法返回一个新的InputStream对象 。
+&emsp;&emsp;`InputStreamSource` 封装任何能返回InputStream的类，比如File、Classpath下的资源和Byte Array等， 它只有一个方法定义：`getInputStream()`，该方法返回一个新的InputStream对象 。
 
-`Resource`接口抽象了所有Spring内部使用到的底层资源：`File`、`URL`、`Classpath`等。首先，它定义了3个判断当前资源状态的方法：`存在性(exists)`、`可读性(isReadable)`、是否处于打开状态(`isOpen`)。另外，Resource接口还提供了不同资源到`URL`、`URI`、`File`类型的转换，以及获取lastModified属性、文件名(不带路径信息的文件名，getFilename())的方法，为了便于操作，Resource还提供了基于当前资源创建一个相对资源的方法：createRelative()，还提供了getDescription()方法用于在错误处理中的打印信息。 
+&emsp;&emsp;`Resource`接口抽象了所有Spring内部使用到的底层资源：`File`、`URL`、`Classpath`等。首先，它定义了3个判断当前资源状态的方法：`存在性(exists)`、`可读性(isReadable)`、是否处于打开状态(`isOpen`)。另外，Resource接口还提供了不同资源到`URL`、`URI`、`File`类型的转换，以及获取lastModified属性、文件名(不带路径信息的文件名，getFilename())的方法，为了便于操作，Resource还提供了基于当前资源创建一个相对资源的方法：createRelative()，还提供了getDescription()方法用于在错误处理中的打印信息。 
 
-对不同来源的资源文件都有相应的Resource实现：文件(`FileSystemResource`)、Classpath资源(`ClassPathResource`)、URL资源(`UrlResource`)、InputStream资源(`InputStreamResource`)、Byte数组(`ByteArrayResource`)等，相关类图如下所示： 
+&emsp;&emsp;对不同来源的资源文件都有相应的Resource实现：文件(`FileSystemResource`)、Classpath资源(`ClassPathResource`)、URL资源(`UrlResource`)、InputStream资源(`InputStreamResource`)、Byte数组(`ByteArrayResource`)等，相关类图如下所示： 
 
 ![Resource](img/Resource.png)
 
