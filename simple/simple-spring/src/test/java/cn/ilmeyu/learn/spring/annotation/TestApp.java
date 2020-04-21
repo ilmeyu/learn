@@ -1,13 +1,13 @@
-package cn.ilmeyu.learn.spring.annotation;
+package cn.iwk.learn.spring.annotation;
 
-import cn.ilmeyu.learn.spring.annotation.bean.Person;
-import cn.ilmeyu.learn.spring.annotation.config.MainConfig;
+import cn.iwk.learn.spring.annotation.bean.Person;
+import cn.iwk.learn.spring.annotation.config.MainConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.testng.annotations.Test;
 
 /**
- * @Author 余文楷
+ * @Author iwk
  * @date 2020/4/4 9:54 下午
  * @since 1.0.0
  **/

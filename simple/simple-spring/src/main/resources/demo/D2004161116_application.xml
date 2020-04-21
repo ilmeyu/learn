@@ -3,8 +3,8 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean class="cn.ilmeyu.learn.spring.demo.D2004161116.A" />
-	<bean class="cn.ilmeyu.learn.spring.demo.D2004161116.B" />
-	<bean class="cn.ilmeyu.learn.spring.demo.D2004161116.C" />
+	<bean class="cn.iwk.learn.spring.demo.D2004161116.A" />
+	<bean class="cn.iwk.learn.spring.demo.D2004161116.B" />
+	<bean class="cn.iwk.learn.spring.demo.D2004161116.C" />
 	
 </beans>

@@ -1,4 +1,4 @@
-package cn.ilmeyu.learn.spring.annotation.bean;
+package cn.iwk.learn.spring.annotation.bean;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 /**
- * @Author 余文楷
+ * @Author iwk
  * @date 2020/4/5 5:15 下午
  * @since 1.0.0
  **/

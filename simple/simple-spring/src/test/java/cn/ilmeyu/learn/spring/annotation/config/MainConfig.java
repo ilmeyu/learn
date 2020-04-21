@@ -1,9 +1,9 @@
-package cn.ilmeyu.learn.spring.annotation.config;
+package cn.iwk.learn.spring.annotation.config;
 
-import cn.ilmeyu.learn.spring.annotation.bean.Famous;
-import cn.ilmeyu.learn.spring.annotation.bean.Person;
-import cn.ilmeyu.learn.spring.annotation.condition.MacOsCondition;
-import cn.ilmeyu.learn.spring.annotation.service.WebService;
+import cn.iwk.learn.spring.annotation.bean.Famous;
+import cn.iwk.learn.spring.annotation.bean.Person;
+import cn.iwk.learn.spring.annotation.condition.MacOsCondition;
+import cn.iwk.learn.spring.annotation.service.WebService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.*;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
 /**
- * @Author 余文楷
+ * @Author iwk
  * @date 2020/4/4 9:54 下午
  * @since 1.0.0
  **/
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Controller;
 @Configuration // 标记: 这是一个spring配置文件
 @ComponentScan(
 	value = {  // 包扫描路径
-		"cn.ilmeyu.learn.spring.annotation"
+		"cn.iwk.learn.spring.annotation"
 	},
 	includeFilters = { // 指定扫描的时候包含哪些组件
 		@ComponentScan.Filter(type = FilterType.ANNOTATION, value = {Controller.class, Component.class})

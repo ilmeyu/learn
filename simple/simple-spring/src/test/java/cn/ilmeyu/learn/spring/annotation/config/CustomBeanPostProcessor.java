@@ -1,4 +1,4 @@
-package cn.ilmeyu.learn.spring.annotation.config;
+package cn.iwk.learn.spring.annotation.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 /**
  * 后置处理器
  *
- * @Author 余文楷
+ * @Author iwk
  * @date 2020/4/5 5:18 下午
  * @since 1.0.0
  **/

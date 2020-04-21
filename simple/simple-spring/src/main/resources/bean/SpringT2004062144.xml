@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:ilme="http://www.ilmeyu.cn/schema/beans"
+       xmlns:ilme="http://www.iwk.cn/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-	   http://www.ilmeyu.cn/schema/beans http://www.ilmeyu.cn/schema/beans.xsd"
+	   http://www.iwk.cn/schema/beans http://www.iwk.cn/schema/beans.xsd"
        default-autowire="byType"
 >
 	
@@ -29,6 +29,6 @@
 	
 	<ilme:phone id="100" color="金色" size="20" remark="苹果"/>
 	
-	<bean class="cn.ilmeyu.learn.spring.bean.beans.IgnoreInterfaceImpl" />
+	<bean class="cn.iwk.learn.spring.bean.beans.IgnoreInterfaceImpl" />
 	
 </beans>

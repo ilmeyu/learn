@@ -37,6 +37,7 @@
 		<property name="swagger2" value="${globalConfig.swagger2}" />
 		<property name="dateType" value="${globalConfig.dateType}" />
 		<property name="entityName" value="${globalConfig.entityName}" />
+		<property name="serviceName" value="${globalConfig.serviceName}" />
 		<property name="open" value="${globalConfig.open}" />
 	</bean>
 	

@@ -4,7 +4,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	
-	<bean id="car" class="cn.ilmeyu.learn.spring.ioc.beans.CarFactoryBean" p:carInfo="大奔,600,1000000" />
+	<bean id="car" class="cn.iwk.learn.spring.ioc.beans.CarFactoryBean" p:carInfo="大奔,600,1000000" />
 	
 	<bean id="brand" class="java.lang.String">
 		<constructor-arg value="雷克沙斯" />

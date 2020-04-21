@@ -1,9 +1,9 @@
-package cn.ilmeyu.learn.spring.annotation.bean;
+package cn.iwk.learn.spring.annotation.bean;
 
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @Author 余文楷
+ * @Author iwk
  * @date 2020/4/4 9:51 下午
  * @since 1.0.0
  **/

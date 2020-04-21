@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            xmlns="http://www.ilmeyu.cn/schema/beans"
-            targetNamespace="http://www.ilmeyu.cn/schema/beans"
+            xmlns="http://www.iwk.cn/schema/beans"
+            targetNamespace="http://www.iwk.cn/schema/beans"
             elementFormDefault="qualified">
 	
 	<xsd:element name="user">

@@ -1,4 +1,4 @@
-package cn.ilmeyu.learn.spring.annotation.bean;
+package cn.iwk.learn.spring.annotation.bean;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
 /**
- * @Author 余文楷
+ * @Author iwk
  * @date 2020/4/4 10:23 下午
  * @since 1.0.0
  **/

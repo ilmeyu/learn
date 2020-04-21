@@ -8,13 +8,8 @@
 * [工程搭建](#工程搭建)
     * [beans包的层级结构](#beans包的层级结构)
     * [核心类介绍](#核心类介绍)
-    * [DefaultListableBeanFactory](#defaultlistablebeanfactory)
-    * [XmlBeanDefinitionReader](#xmlbeandefinitionreader)
 * [容器的基础XmlBeanFactory](#容器的基础xmlbeanfactory)
 * [配置文件的封装](#配置文件的封装)
-    * [ClassPathResource.java](#classpathresourcejava)
-    * [FileSystemResource.java](#filesystemresourcejava)
-    * [XmlBeanFactory.java](#xmlbeanfactoryjava)
 * [bean加载](#bean加载)
 * [获取XML的验证模式](#获取xml的验证模式)
     * [DTD和XSD区别](#dtd和xsd区别)
@@ -55,7 +50,7 @@ public class User {
 	
 	<bean id="user" class="cn.ilmeyu.learn.spring.beans.User">
 		<property name="id" value="100001" />
-		<property name="email" value="www.email.ilmeyu" />
+		<property name="email" value="www.email.iwk" />
 		<property name="userName" value="张三" />
 	</bean>
 
@@ -81,7 +76,7 @@ public class App {
 ```text
 23:04:47.866 [main] DEBUG org.springframework.beans.factory.xml.XmlBeanDefinitionReader - Loaded 1 bean definitions from class path resource [application.xml]
 23:04:47.874 [main] DEBUG org.springframework.beans.factory.xml.XmlBeanFactory - Creating shared instance of singleton bean 'user'
-User(id=100001, userName=张三, email=www.email.ilmeyu)
+User(id=100001, userName=张三, email=www.email.iwk)
 
 Process finished with exit code 0
 ```

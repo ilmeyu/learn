@@ -1,10 +1,10 @@
-package cn.ilmeyu.learn.spring.annotation.controller;
+package cn.iwk.learn.spring.annotation.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 
 /**
- * @Author 余文楷
+ * @Author iwk
  * @date 2020/4/4 10:44 下午
  * @since 1.0.0
  **/

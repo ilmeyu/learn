@@ -6,7 +6,7 @@
 	
 	<bean id="user" class="cn.ilmeyu.learn.spring.beans.User">
 		<property name="id" value="100001" />
-		<property name="email" value="www.email.ilmeyu" />
+		<property name="email" value="www.email.iwk" />
 		<property name="userName" value="张三" />
 	</bean>
 	

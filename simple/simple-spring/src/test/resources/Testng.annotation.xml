@@ -3,7 +3,7 @@
 <suite name="Suite: annotation.TestApp">
 <test name="Test: annotation.TestApp">
 	<classes>
-		<class name="cn.ilmeyu.learn.spring.annotation.TestApp">
+		<class name="cn.iwk.learn.spring.annotation.TestApp">
 			<methods>
 				<include name="testBeanScan" />
 			</methods>
