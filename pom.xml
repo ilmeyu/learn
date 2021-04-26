@@ -24,7 +24,7 @@
         <spring.version>5.2.4.RELEASE</spring.version>
         <logback.version>1.2.3</logback.version>
         <testng.version>7.1.0</testng.version>
-        <apache-commons-io.version>2.6</apache-commons-io.version>
+        <apache-commons-io.version>2.7</apache-commons-io.version>
         <HikariCP.version>3.4.2</HikariCP.version>
         <jdbc-mysql.version>8.0.19</jdbc-mysql.version>
         <druid.version>1.1.21</druid.version>
