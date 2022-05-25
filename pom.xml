@@ -21,7 +21,7 @@
     <properties>
         <jdk.version>1.8</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>5.2.4.RELEASE</spring.version>
+        <spring.version>5.2.22.RELEASE</spring.version>
         <logback.version>1.2.3</logback.version>
         <testng.version>7.1.0</testng.version>
         <apache-commons-io.version>2.6</apache-commons-io.version>
